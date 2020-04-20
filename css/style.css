@@ -5,16 +5,23 @@ body {
   font-size: calc(14px + 0.5vw);
   /* leading grows along with font */
   line-height: calc(0.5em + 0.2vw);
+  margin: 0;
 }
 
 h1, h2, h3, h4 {
   font-family: 'Baloo Paaji 2', serif;
   font-weight: bold;
   color: red;
+  margin: 10px;
+  padding: 10px;
+}
+
+img {
+  width:100%;
 }
 
 #map {
-  height: 100vw;
+  height: 93vh;
   width: 100vw;
   display: inline-block;
 }
