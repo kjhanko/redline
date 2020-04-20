@@ -1,0 +1,20 @@
+
+body {
+	font-family: 'Quicksand', serif;
+  /* font grows 1px for every 100px of viewport width */
+  font-size: calc(14px + 0.5vw);
+  /* leading grows along with font */
+  line-height: calc(0.5em + 0.2vw);
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Baloo Paaji 2', serif;
+  font-weight: bold;
+  color: red;
+}
+
+#map {
+  height: 100vw;
+  width: 100vw;
+  display: inline-block;
+}
