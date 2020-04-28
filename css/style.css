@@ -6,6 +6,8 @@ body {
   /* leading grows along with font */
   line-height: calc(0.5em + 0.2vw);
   margin: 0;
+  padding: 0;
+  
 }
 
 h1, h2, h3, h4 {
@@ -20,8 +22,3 @@ img {
   width:100%;
 }
 
-#map {
-  height: 93vh;
-  width: 100vw;
-  display: inline-block;
-}
