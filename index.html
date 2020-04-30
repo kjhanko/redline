@@ -11,93 +11,35 @@
   <!-- <link rel="stylesheet" href="css/bootstrap.min.css"> -->
     <script src='https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css' rel='stylesheet' />  
+    <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'></script>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 <!--     <link rel="stylesheet" href="css/style.css"> -->
     <style>
         body { font-family: 'Open Sans', sans-serif; margin: 0; padding: 0; }
         #title { z-index: 100; position: fixed; top:0; width: 100%; color: #aaa; font-weight: bold; padding: 15px; background-color: #000; border-bottom: 2px solid #d73027; font-size: 30px;  }
-        h1, h2, h3, h4 {
-          font-weight: bold;
-          color: red;
-          margin: 10px;
-          padding: 10px;
-        }
-        
+        h1, h2, h3, h4 { font-weight: bold; color: red; margin: 10px; padding: 10px; }
         #map { position: absolute; top: 0; bottom: 0; width: 100%; }
         .mapboxgl-ctrl-top-left { top: 84px; left: 200px; }
-        .map-overlay {
-          position: absolute;
-          bottom: 0;
-          right: 0;
-          background: rgba(255, 255, 255, 0.8);
-          margin-right: 20px;
-          overflow: auto;
-          border-radius: 3px;
-        }
+        .map-overlay {  position: absolute; bottom: 0; right: 0; background: rgba(255, 255, 255, 0.8); margin-right: 20px; overflow: auto; border-radius: 3px; }
         .info { position:absolute; background: rgba(255, 255, 255, 0.8); display:none; top: 72px; left: 50%; transform:translateX(-50%); z-index: 100; width: 30vw; text-align: center; padding: 15px; font-size: 13px; line-height: 120%; }
         .info .addr { font-weight: bold; }
         .left-panels { width: 150px; font-size: 11px; line-height: 130%; position: absolute; left: 0; margin-left: 15px; background: rgba(255, 255, 255, 0.8); padding: 15px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
         .left-top { top: 94px; }
         .left-bottom { bottom: 0; margin-bottom: 40px; }
-        #features {
-          top: 0;
-          height: 100px;
-          margin-top: 20px;
-          width: 250px;
-        }
-        
+        #features { top: 0; height: 100px; margin-top: 20px; width: 250px; }
         #legend { font-weight: bold; line-height: 0;  }
         #legend .legend-hed,#legend .note { line-height: 120%; }
         .legend-hed { margin-bottom: 4px; font-size: 13px; }
         .note { font-size: 9px; font-weight: 400; margin-top: 8px; }
-        .legend-key {
-          display: inline-block;
-          width: 15px;
-          height: 15px;
-          margin-right: 5px;
-        }
+        .legend-key { display: inline-block; width: 15px; height: 15px; margin-right: 5px; }
         .legend-val { vertical-align: 3px; }        
-        
-        #menu {
-        background: #fff;
-        position: absolute;
-        z-index: 1;
-        top: 94px;
-        right: 10px;
-        border-radius: 3px;
-        width: 120px;
-        border: 1px solid rgba(0, 0, 0, 0.4);
-        }
-         
-        #menu a {
-        font-size: 13px;
-        color: #404040;
-        display: block;
-        margin: 0;
-        padding: 0;
-        padding: 10px;
-        text-decoration: none;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-        text-align: center;
-        }
-         
-        #menu a:last-child {
-        border: none;
-        }
-         
-        #menu a:hover {
-        background-color: #f8f8f8;
-        color: #404040;
-        }
-         
-        #menu a.active {
-        background-color: #3887be;
-        color: #ffffff;
-        }
-         
-        #menu a.active:hover {
-        background: #3074a4;
-        }
+
+        #menu { background: #fff; position: absolute; z-index: 1; top: 94px; right: 10px; border-radius: 3px; width: 120px; border: 1px solid rgba(0, 0, 0, 0.4); }  
+        #menu a { font-size: 13px; color: #404040; display: block; margin: 0; padding: 0; padding: 10px; text-decoration: none; border-bottom: 1px solid rgba(0, 0, 0, 0.25); text-align: center; }
+        #menu a:last-child { border: none; }
+        #menu a:hover { background-color: #f8f8f8; color: #404040; }
+        #menu a.active { background-color: #3887be; color: #ffffff; }
+        #menu a.active:hover { background: #3074a4; }
 
 
     </style>
@@ -115,6 +57,14 @@
     </div>
     
         <div class="left-panels left-top">
+            <div>
+                <select id="change_city">
+                    <option selected>Choose a city</option>
+                    <option value="Madison">Madison</option>
+                    <option value="Portland">Portland</option>
+                    <option value="Atlanta">Atlanta</option>
+                </select>
+            </div>
             Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
         </div>
         <div class="left-panels left-bottom" id="legend"></div>
@@ -125,72 +75,120 @@
 <!--   <script src="js/main.js" type="text/javascript"></script> -->
 
     <script>
-
 		function addCommas(x) {
 		    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		}
 
+        var cityData = {};
+        
+        
+        $.ajax({ 
+            type: 'GET', 
+            async: false,
+            url: 'data/city_data.geojson', 
+            data: { get_param: 'value' }, 
+            dataType: 'json',
+            success: function (data) { 
+                $.each(data.features, function(k, v) {
+                    p = v.properties;
+                    g = v.geometry;
+                    bbox = turf.extent(g);
+                    cityData[p.city] = {
+                        "name": p.city,
+                        "holc_map": p.holc_map,
+                        "parcel_map": p.parcel_map,
+                        "breaks": p.breaks,
+                        "bbox": bbox
+                    }
+                });
+            }
+        });
+        var colors = ['#d73027','#f46d43','#fdae61','#fee08b','#d9ef8b','#a6d96a','#66bd63','#1a9850'];
+        mapbox_path = "mapbox://mfriesenwisc.";
 
         mapboxgl.accessToken = 'pk.eyJ1IjoibWZyaWVzZW53aXNjIiwiYSI6ImNqenhjcjAzYjBlc3QzbmtpODI1YXZxNmgifQ.Zz-z-Ykof8NbNaQOdR6ouQ';
         var map = new mapboxgl.Map({
           container: 'map', // container id
           style: 'mapbox://styles/mapbox/light-v10',
-          center: [-122.65,45.5],
-          zoom: 10
+          center: [-98.5795,38.8283],
+          zoom: 3
         });        
         var nav = new mapboxgl.NavigationControl({showCompass:false});
         map.addControl(nav,'top-left');
         var hoveredStateId = null;
+
+        var drop = document.getElementById("change_city");
+        drop.addEventListener("change", makeCity);
+
+
+
         
         map.on('load',function() {
+        })
+        
+        function makeCity(event) {
+            var city = drop.value;
+            var citylower = city.toLowerCase();
+            var breaks = cityData[city].breaks;
+            map.fitBounds(cityData[city].bbox);
             map.addLayer({
                 id: 'holc-map',
                 type: 'raster',
                 source: {
                     type: 'raster',
-                    tiles: ['https://api.mapbox.com/v4/mfriesenwisc.1gdiol06/{z}/{x}/{y}.png?access_token='+mapboxgl.accessToken],
+                    tiles: ['https://api.mapbox.com/v4/mfriesenwisc.' + cityData[city].holc_map + '/{z}/{x}/{y}.png?access_token='+mapboxgl.accessToken],
                 },
                 layout: { 'visibility': 'none' }
             })
             
+            map.addSource(citylower+'-holc-shapes', {
+                type: 'geojson',
+                data: 'data/'+citylower+'_holc.geojson'
+            });
+            
+            map.addLayer({
+                id: citylower+'-holc',
+                type: 'fill',
+                source: citylower+'-holc-shapes',
+                paint: {
+                    'fill-color': 'rgba(200, 100, 240, 0.4)',
+                    'fill-outline-color': 'rgba(200, 100, 240, 1)'
+                }
+            })
             
             
-            
-            
-            
-            map.addSource('parcels', {
+            map.addSource(citylower+'-parcels', {
                 type: 'vector',
-                url: 'mapbox://mfriesenwisc.3dk9ah5o'
-
+                url: mapbox_path + cityData[city].parcel_map
             })
             
             map.addLayer({
-                'id': 'portland-parcels',
+                'id': citylower+'-parcels',
                 'type': 'fill',
-                'source': 'parcels',
-                'source-layer': 'portland_parcels',
+                'source': citylower+'-parcels',
+                'source-layer': citylower + '_parcels',
                 'layout': { 'visibility': 'visible'},
                 'paint': {
                     'fill-color': [
                         'interpolate',
                         ['linear'],
-                        ['get','TOTALVAL'],
-                        0,
-                        '#d73027',
-                        150000,
-                        '#f46d43',
-                        250000,
-                        '#fdae61',
-                        350000,
-                        '#fee08b',
-                        439000,
-                        '#d9ef8b',
-                        750000,
-                        '#a6d96a',
-                        1000000,
-                        '#66bd63',
-                        2000000,
-                        '#1a9850'
+                        ['get','value'],
+                        breaks[0],
+                        colors[0],
+                        breaks[1],
+                        colors[1],
+                        breaks[2],
+                        colors[2],
+                        breaks[3],
+                        colors[3],
+                        breaks[4],
+                        colors[4],
+                        breaks[5],
+                        colors[5],
+                        breaks[6],
+                        colors[6],
+                        breaks[7],
+                        colors[7],
                     ],
                 }
             });
@@ -199,7 +197,7 @@
                 'id': 'parcel-borders',
                 'type':'line',
                 'source': 'parcels',
-                'source-layer': 'portland_parcels',
+                'source-layer': citylower + '_parcels',
                 'paint': {
                     'line-color': '#999999',
                     'line-width': [
@@ -211,18 +209,18 @@
                 }
             })
             
-            map.on('click','portland-parcels',function(e) {
+            map.on('click',citylower+'-parcels',function(e) {
                 var p = e.features[0].properties;
-                var value = p.TOTALVAL;
-                var addr = p.SITEADDR;
+                var value = p.value;
+                var addr = p.siteaddr;
                 $(".addr").text(addr);
                 $(".val").text("Value: $"+addCommas(value));
                 $(".info").show();
             })
-            map.on('mouseenter', 'portland-parcels', function() {
+            map.on('mouseenter', citylower+'-parcels', function() {
                 map.getCanvas().style.cursor = 'pointer';
             });
-            map.on('mousemove', 'portland-borders', function(e) {
+            map.on('mousemove', citylower+'-borders', function(e) {
                 if (e.features.length > 0) {
                     if (hoveredStateId) {
                         map.setFeatureState(
@@ -238,7 +236,7 @@
                 }
             });
             
-            map.on('mouseleave', 'portland-borders', function() {
+            map.on('mouseleave', citylower+'-borders', function() {
                 map.getCanvas().style.cursor = '';
                 if (hoveredStateId) {
                     map.setFeatureState(
@@ -249,56 +247,61 @@
             });
            
 //             make legend
-            var layers = ['<$150,000', '$150,000-$249,000', '$250,000-$349,000', '$350,000-$439,000', '$440,000-$749,000', '$750,000-$1,000,000', '$1,000,000-$2,000,000', '>$2,000,000'];
-            var colors = ['#d73027','#f46d43','#fdae61','#fee08b','#d9ef8b','#a6d96a','#66bd63','#1a9850'];
             // make a pointer cursor
             map.getCanvas().style.cursor = 'default';
             var legendblock = "";
-            $.each(layers, function(k,v) {
+            $.each(colors, function(k,v) {
+                var legend_break;
+                if (k==0) {
+                    legend_break = "<$"+addCommas(breaks[1]);
+                } else if (k==7) {
+                    legend_break = ">$"+addCommas(breaks[7]);
+                } else {
+                    legend_break = "$" + addCommas(breaks[k]) + "-$" + addCommas(breaks[k+1]-1);
+                }
                 legendblock += "<div>"
-                    + "<span class='legend-key' style='background-color:"+colors[k]+"'></span>"
-                    + "<span class='legend-val'>"+v+"</span>"
+                    + "<span class='legend-key' style='background-color:"+v+"'></span>"
+                    + "<span class='legend-val'>"+legend_break+"</span>"
                     + "</div>";
             })
-            legendblock = "<div class='legend-hed'>PROPERTY VALUE KEY</div>"+legendblock+"<div class='note'>Median single family home value: $439,000</div>";
+            legendblock = "<div class='legend-hed'>PROPERTY VALUE KEY</div>"+legendblock+"<div class='note'>" + cityData[city].name +" median single family home value: $"+addCommas(breaks[4])+"</div>";
             $("#legend").html(legendblock);
-        })
 
-        // enumerate ids of the layers
-        var toggleableLayerIds = ['portland-parcels', 'holc-map'];
-         
-        // set up the corresponding toggle button for each layer
-        for (var i = 0; i < toggleableLayerIds.length; i++) {
-            var id = toggleableLayerIds[i];
+            // enumerate ids of the layers
+            var toggleableLayerIds = [citylower+'-parcels', 'holc-map'];
              
-            var link = document.createElement('a');
-            link.href = '#';
-            if (id=='portland-parcels') {
-                link.className = 'active';
-            }
-            link.textContent = id;
-             
-            link.onclick = function(e) {
-                var clickedLayer = this.textContent;
-                e.preventDefault();
-                e.stopPropagation();
+            // set up the corresponding toggle button for each layer
+            for (var i = 0; i < toggleableLayerIds.length; i++) {
+                var id = toggleableLayerIds[i];
                  
-                var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
-                 
-                // toggle layer visibility by changing the layout object's visibility property
-                if (visibility === 'visible') {
-                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-                    this.className = '';
-                } else {
-                    this.className = 'active';
-                    map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                var link = document.createElement('a');
+                link.href = '#';
+                if (id==citylower+'-parcels') {
+                    link.className = 'active';
                 }
-            };
-             
-            var layers = document.getElementById('menu');
-            layers.appendChild(link);
+                link.textContent = id;
+                 
+                link.onclick = function(e) {
+                    var clickedLayer = this.textContent;
+                    e.preventDefault();
+                    e.stopPropagation();
+                     
+                    var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+                     
+                    // toggle layer visibility by changing the layout object's visibility property
+                    if (visibility === 'visible') {
+                        map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                        this.className = '';
+                    } else {
+                        this.className = 'active';
+                        map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                    }
+                };
+                 
+                var layers = document.getElementById('menu');
+                layers.appendChild(link);
+            }
         }
-        
         
     </script>
 </body>
