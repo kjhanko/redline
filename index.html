@@ -21,7 +21,7 @@
         #map { position: absolute; top: 0; bottom: 0; width: 100%; }
         .mapboxgl-ctrl-top-left { top: 84px; left: 200px; }
         .map-overlay {  position: absolute; bottom: 0; right: 0; background: rgba(255, 255, 255, 0.8); margin-right: 20px; overflow: auto; border-radius: 3px; }
-        .info { position:absolute; background: rgba(255, 255, 255, 0.8); display:none; top: 72px; left: 50%; transform:translateX(-50%); z-index: 100; width: 30vw; text-align: center; padding: 15px; font-size: 13px; line-height: 120%; }
+        .info { position:absolute; background: rgba(255, 255, 255, 0.8); display:none; top: 73px; left: 50%; transform:translateX(-50%); z-index: 100; width: 30vw; text-align: center; padding: 15px; font-size: 13px; line-height: 120%; }
         .info .addr { font-weight: bold; }
         .left-panels { width: 150px; font-size: 11px; line-height: 130%; position: absolute; left: 0; margin-left: 15px; background: rgba(255, 255, 255, 0.8); padding: 15px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
         .left-top { top: 94px; }
@@ -60,9 +60,11 @@
             <div>
                 <select id="change_city">
                     <option selected>Choose a city</option>
-                    <option value="Madison">Madison</option>
-                    <option value="Portland">Portland</option>
                     <option value="Atlanta">Atlanta</option>
+                    <option value="Durham">Durham</option>
+                    <option value="Madison">Madison</option>
+                    <option value="Minneapolis">Minneapolis</option>
+                    <option value="Portland">Portland</option>
                 </select>
             </div>
             Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -130,9 +132,9 @@
             var city = drop.value;
             var citylower = city.toLowerCase();
             var breaks = cityData[city].breaks;
-            map.fitBounds(cityData[city].bbox);
+            map.fitBounds(cityData[city].bbox, {padding: 150});
             map.addLayer({
-                id: 'holc-map',
+                id: citylower+'-holc-map',
                 type: 'raster',
                 source: {
                     type: 'raster',
@@ -147,12 +149,24 @@
             });
             
             map.addLayer({
-                id: citylower+'-holc',
-                type: 'fill',
-                source: citylower+'-holc-shapes',
-                paint: {
-                    'fill-color': 'rgba(200, 100, 240, 0.4)',
-                    'fill-outline-color': 'rgba(200, 100, 240, 1)'
+                'id': citylower+'-holc',
+                'type': 'fill',
+                'source': citylower+'-holc-shapes',
+                'paint': {
+                    'fill-opacity': 0.6,
+                    'fill-color': [
+                        'match',
+                        ['get','holc_grade'],
+                        'A',
+                        '#66c2a5',
+                        'B',
+                        '#3288bd',
+                        'C',
+                        '#fee08b',
+                        'D',
+                        '#d53e4f',
+                        '#ccc'
+                    ],
                 }
             })
             
@@ -194,9 +208,9 @@
             });
             
             map.addLayer({
-                'id': 'parcel-borders',
+                'id': citylower+'-parcel-borders',
                 'type':'line',
-                'source': 'parcels',
+                'source': citylower+'-parcels',
                 'source-layer': citylower + '_parcels',
                 'paint': {
                     'line-color': '#999999',
@@ -220,27 +234,27 @@
             map.on('mouseenter', citylower+'-parcels', function() {
                 map.getCanvas().style.cursor = 'pointer';
             });
-            map.on('mousemove', citylower+'-borders', function(e) {
+            map.on('mousemove', citylower+'-parcel-borders', function(e) {
                 if (e.features.length > 0) {
                     if (hoveredStateId) {
                         map.setFeatureState(
-                            { source: 'parcels', id: hoveredStateId },
+                            { source: citylower+'-parcels', id: hoveredStateId },
                             { hover: false }
                         );
                     }
                     hoveredStateId = e.features[0].id;
                     map.setFeatureState(
-                        { source: 'parcels', id: hoveredStateId },
+                        { source: citylower+'-parcels', id: hoveredStateId },
                         { hover: true }
                     );
                 }
             });
             
-            map.on('mouseleave', citylower+'-borders', function() {
+            map.on('mouseleave', citylower+'-parcel-borders', function() {
                 map.getCanvas().style.cursor = '';
                 if (hoveredStateId) {
                     map.setFeatureState(
-                        { source: 'parcels', id: hoveredStateId },
+                        { source: citylower+'-parcels', id: hoveredStateId },
                         { hover: false }
                     );
                 }
@@ -268,7 +282,7 @@
             $("#legend").html(legendblock);
 
             // enumerate ids of the layers
-            var toggleableLayerIds = [citylower+'-parcels', 'holc-map'];
+            var toggleableLayerIds = [citylower+'-parcels', citylower+'-holc-map'];
              
             // set up the corresponding toggle button for each layer
             for (var i = 0; i < toggleableLayerIds.length; i++) {
