@@ -1,137 +1,258 @@
-//main js file
+function addCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+    var cityData = {};
 
 
-/*
-var parcels = $.ajax({
-    url: "data/Portland/parcels.geojson",
-    dataType: "json",
-    success: console.log("Parcels loaded"),
-    error: function(xhr) {
-        alert("Parcels: ${xhr.statusText}");
-    }
-});
-*/
-
-
-
-
-//Create the map
-
-  //creates a Leaflet map centered on CONUS
-  var map = L.map('map', {
-    center: [45.5, -122.7],
-    zoom: 6,
-  });
-
-  //add OSM base tilelayer
-  L.tileLayer('http://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> | &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
-  }).addTo(map);
-
-  //using Leaflet's ControlSearch with OSM to allow seaching of addresses
-  map.addControl(new L.Control.Search({
-    url: 'https://nominatim.openstreetmap.org/search?format=json&q={s}',
-    jsonParam: 'json_callback',
-    propertyName: 'display_name',
-    propertyLoc: ['lat', 'lon'],
-    marker: L.circleMarker([0, 0], { radius: 30 }),
-    autoCollapse: true,
-    autoType: false,
-    minLength: 2,
-    position: 'topleft',
-    initial: false,
-    zoom: 16,
-  }));
-  
- 
-
-
-
-    var parcels = L.geoJson();
-    var tileData = omnivore.topojson("data/Portland/parcels.topojson", null, parcels);
-    tileData.on('ready', function() {
-      console.log('parcel data ready');
-      map.fitBounds(parcels.getBounds());
-
-
-
-      //geojson-vt
-      var tileOptions = {
-        maxZoom: 20, // max zoom to preserve detail on
-        tolerance: 7, // 5 simplification tolerance (higher means simpler)
-        extent: 4096, //4096, // 4096 tile extent (both width and height)
-        buffer: 64, // 64 default 64tile buffer on each side
-        debug: 2, // logging level (0 to disable, 1 or 2)
-        indexMaxZoom: 0, // 0 max zoom in the initial tile index
-        indexMaxPoints: 100000, // 100000 max number of points per tile in the index
-      };
-      var data = parcels.toGeoJSON();
-      var timeEnd = (Date.now() - timeStart)/1000;
-      $('#mapDescription').append('<span style="color:red;font-weight:600;">32,329 Polygons loaded in ' + timeEnd.toFixed(2) + ' seconds</span><hr />')
-      var tileIndex = geojsonvt(data, tileOptions);
-      //take json output from geojson-vt and draw it with the now depricated (in leaflet-beta) L.canvasTiles and code from here - http://blog.sumbera.com/2015/05/31/geojson-vt-on-leaflet/
-      var tileLayer = L.canvasTiles().params({
-        debug: false,
-        padding: 50
-      }).drawing(drawingOnCanvas);
-      var pad = 0;
-      tileLayer.addTo(map);
-      tileLayer.setZIndex(10);
-
-      function drawingOnCanvas(canvasOverlay, params) {
-
-        var bounds = params.bounds;
-        params.tilePoint.z = params.zoom;
-
-        var ctx = params.canvas.getContext('2d');
-        ctx.globalCompositeOperation = 'source-over';
-
-
-        //console.log('getting tile z' + params.tilePoint.z + '-' + params.tilePoint.x + '-' + params.tilePoint.y);
-
-        var tile = tileIndex.getTile(params.tilePoint.z, params.tilePoint.x, params.tilePoint.y);
-        if (!tile) {
-          //console.log('tile empty');
-          return;
+    $.ajax({
+        type: 'GET',
+        async: false,
+        url: 'data/city_data.geojson',
+        data: { get_param: 'value' },
+        dataType: 'json',
+        success: function (data) {
+            $.each(data.features, function(k, v) {
+                p = v.properties;
+                g = v.geometry;
+                bbox = turf.extent(g);
+                cityData[p.city] = {
+                    "name": p.city,
+                    "holc_map": p.holc_map,
+                    "parcel_map": p.parcel_map,
+                    "breaks": p.breaks,
+                    "bbox": bbox
+                }
+            });
         }
-
-        ctx.clearRect(0, 0, params.canvas.width, params.canvas.height);
-
-        var features = tile.features;
-
-        ctx.strokeStyle = '#b2b2b2';
-
-
-        for (var i = 0; i < features.length; i++) {
-          var feature = features[i],
-            type = feature.type;
-
-          ctx.fillStyle = feature.tags.color ? feature.tags.color : 'transparent';
-          ctx.beginPath();
-
-          for (var j = 0; j < feature.geometry.length; j++) {
-            var geom = feature.geometry[j];
-
-            if (type === 1) {
-              ctx.arc(geom[0] * ratio + pad, geom[1] * ratio + pad, 2, 0, 2 * Math.PI, false);
-              continue;
-            }
-
-            for (var k = 0; k < geom.length; k++) {
-              var p = geom[k];
-              var extent = 4096;
-
-              var x = p[0] / extent * 256;
-              var y = p[1] / extent * 256;
-              if (k) ctx.lineTo(x + pad, y + pad);
-              else ctx.moveTo(x + pad, y + pad);
-            }
-          }
-
-          if (type === 3 || type === 1) ctx.fill();
-          ctx.stroke();
-        }
-
-      };
-
     });
+    var colors = ['#d73027','#f46d43','#fdae61','#fee08b','#d9ef8b','#a6d96a','#66bd63','#1a9850'];
+    mapbox_path = "mapbox://mfriesenwisc.";
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoibWZyaWVzZW53aXNjIiwiYSI6ImNqenhjcjAzYjBlc3QzbmtpODI1YXZxNmgifQ.Zz-z-Ykof8NbNaQOdR6ouQ';
+    var map = new mapboxgl.Map({
+      container: 'map', // container id
+      style: 'mapbox://styles/mapbox/light-v10',
+      center: [-98.5795,38.8283],
+      zoom: 3
+    });
+    map.addControl(
+      new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        mapboxgl: mapboxgl
+      })
+    );
+
+    var nav = new mapboxgl.NavigationControl({showCompass:false});
+    map.addControl(nav,'top-left');
+    var hoveredStateId = null;
+
+    var drop = document.getElementById("change_city");
+    drop.addEventListener("change", makeCity);
+
+
+
+
+    map.on('load',function() {
+    })
+
+    function makeCity(event) {
+        var city = drop.value;
+        var citylower = city.toLowerCase();
+        var breaks = cityData[city].breaks;
+        map.fitBounds(cityData[city].bbox, {padding: 150});
+        map.addLayer({
+            id: citylower+'-holc-map',
+            type: 'raster',
+            source: {
+                type: 'raster',
+                tiles: ['https://api.mapbox.com/v4/mfriesenwisc.' + cityData[city].holc_map + '/{z}/{x}/{y}.png?access_token='+mapboxgl.accessToken],
+            },
+            layout: { 'visibility': 'none' }
+        })
+
+        map.addSource(citylower+'-holc-shapes', {
+            type: 'geojson',
+            data: 'data/'+citylower+'_holc.geojson'
+        });
+
+        map.addLayer({
+            'id': citylower+'-holc',
+            'type': 'fill',
+            'source': citylower+'-holc-shapes',
+            'paint': {
+                'fill-opacity': 0.6,
+                'fill-color': [
+                    'match',
+                    ['get','holc_grade'],
+                    'A',
+                    '#66c2a5',
+                    'B',
+                    '#3288bd',
+                    'C',
+                    '#fee08b',
+                    'D',
+                    '#d53e4f',
+                    '#ccc'
+                ],
+            }
+        })
+
+
+        map.addSource(citylower+'-parcels', {
+            type: 'vector',
+            url: mapbox_path + cityData[city].parcel_map
+        })
+
+        map.addLayer({
+            'id': citylower+'-parcels',
+            'type': 'fill',
+            'source': citylower+'-parcels',
+            'source-layer': citylower + '_parcels',
+            'layout': { 'visibility': 'visible'},
+            'paint': {
+                'fill-color': [
+                    'interpolate',
+                    ['linear'],
+                    ['get','value'],
+                    breaks[0],
+                    colors[0],
+                    breaks[1],
+                    colors[1],
+                    breaks[2],
+                    colors[2],
+                    breaks[3],
+                    colors[3],
+                    breaks[4],
+                    colors[4],
+                    breaks[5],
+                    colors[5],
+                    breaks[6],
+                    colors[6],
+                    breaks[7],
+                    colors[7],
+                ],
+            }
+        });
+
+        map.addLayer({
+            'id': citylower+'-parcel-borders',
+            'type':'line',
+            'source': citylower+'-parcels',
+            'source-layer': citylower + '_parcels',
+            'paint': {
+                'line-color': '#999999',
+                'line-width': [
+                    'case',
+                    ['boolean', ['feature-state','hover'], false],
+                    1,
+                    0
+                ]
+            }
+        })
+
+        map.on('click',citylower+'-parcels',function(e) {
+            var p = e.features[0].properties;
+            var value = p.value;
+            var addr = p.siteaddr;
+            var median = breaks[4];
+            var pctdiff = ((value-median)/median)*100;
+            var difference = "<strong>Same</strong> as the city average";
+            if (pctdiff>0) {
+                difference = "<strong class='above'>"+Math.abs(pctdiff).toFixed(1)+"% above</strong> the city average";
+            } else if (pctdiff<0) {
+                difference = "<strong class='below'>"+Math.abs(pctdiff).toFixed(1)+"% below</strong> the city average";
+            }
+            $(".addr").text(addr);
+            $(".val").text("Value: $"+addCommas(value));
+            $(".med").html(difference);
+            $(".info").show();
+        })
+        map.on('mouseenter', citylower+'-parcels', function() {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+        map.on('mousemove', citylower+'-parcel-borders', function(e) {
+            if (e.features.length > 0) {
+                if (hoveredStateId) {
+                    map.setFeatureState(
+                        { source: citylower+'-parcels', id: hoveredStateId },
+                        { hover: false }
+                    );
+                }
+                hoveredStateId = e.features[0].id;
+                map.setFeatureState(
+                    { source: citylower+'-parcels', id: hoveredStateId },
+                    { hover: true }
+                );
+            }
+        });
+
+        map.on('mouseleave', citylower+'-parcel-borders', function() {
+            map.getCanvas().style.cursor = '';
+            if (hoveredStateId) {
+                map.setFeatureState(
+                    { source: citylower+'-parcels', id: hoveredStateId },
+                    { hover: false }
+                );
+            }
+        });
+
+//             make legend
+        // make a pointer cursor
+        map.getCanvas().style.cursor = 'default';
+        var legendblock = "";
+        $.each(colors, function(k,v) {
+            var legend_break;
+            if (k==0) {
+                legend_break = "<$"+addCommas(breaks[1]);
+            } else if (k==7) {
+                legend_break = ">$"+addCommas(breaks[7]);
+            } else {
+                legend_break = "$" + addCommas(breaks[k]) + "-$" + addCommas(breaks[k+1]-1);
+            }
+            legendblock += "<div>"
+                + "<span class='legend-key' style='background-color:"+v+"'></span>"
+                + "<span class='legend-val'>"+legend_break+"</span>"
+                + "</div>";
+        })
+        legendblock = "<div class='legend-hed'>PROPERTY VALUE KEY</div>"+legendblock+"<div class='note'>" + cityData[city].name +" median single family home value: $"+addCommas(breaks[4])+"</div>";
+        $("#legend").html(legendblock);
+
+
+        //Code for layer toggle
+
+        // enumerate ids of the layers
+        var toggleableLayerIds = [citylower+'-parcels', citylower+'-holc-map'];
+
+        // set up the corresponding toggle button for each layer
+        for (var i = 0; i < toggleableLayerIds.length; i++) {
+            var id = toggleableLayerIds[i];
+
+            var link = document.createElement('a');
+            link.href = '#';
+            if (id==citylower+'-parcels') {
+                link.className = 'active';
+            }
+            link.textContent = id;
+
+            link.onclick = function(e) {
+                var clickedLayer = this.textContent;
+                e.preventDefault();
+                e.stopPropagation();
+
+                var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+                // toggle layer visibility by changing the layout object's visibility property
+                if (visibility === 'visible') {
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                    this.className = '';
+                } else {
+                    this.className = 'active';
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                }
+            };
+
+            var layers = document.getElementById('menu');
+            layers.appendChild(link);
+        }
+    }
