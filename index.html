@@ -7,8 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Redlining and Property Values in America</title>
     <script src="lib/jquery-3.4.1.js" type="text/javascript"></script>
-    
-  <!-- <link rel="stylesheet" href="css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src='https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css' rel='stylesheet' />  
     <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'></script>
@@ -17,14 +16,16 @@
     <style>
         body { font-family: 'Open Sans', sans-serif; margin: 0; padding: 0; }
         #title { z-index: 100; position: fixed; top:0; width: 100%; color: #aaa; font-weight: bold; padding: 15px; background-color: #000; border-bottom: 2px solid #d73027; font-size: 30px;  }
-        h1, h2, h3, h4 { font-weight: bold; color: red; margin: 10px; padding: 10px; }
+        h1, h2, h3, h4 { font-weight: bold; }
         #map { position: absolute; top: 0; bottom: 0; width: 100%; }
         .mapboxgl-ctrl-top-left { top: 84px; left: 200px; }
         .map-overlay {  position: absolute; bottom: 0; right: 0; background: rgba(255, 255, 255, 0.8); margin-right: 20px; overflow: auto; border-radius: 3px; }
-        .info { position:absolute; background: rgba(255, 255, 255, 0.8); display:none; top: 73px; left: 50%; transform:translateX(-50%); z-index: 100; width: 30vw; text-align: center; padding: 15px; font-size: 13px; line-height: 120%; }
+        .info { position:absolute; background: rgba(255, 255, 255, 0.8); display:none; top: 77px; left: 50%; transform:translateX(-50%); z-index: 100; width: 30vw; text-align: center; padding: 15px; font-size: 13px; line-height: 120%; }
         .info .addr { font-weight: bold; }
-        .left-panels { width: 150px; font-size: 11px; line-height: 130%; position: absolute; left: 0; margin-left: 15px; background: rgba(255, 255, 255, 0.8); padding: 15px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
+        .left-panels,.right-panels { width: 180px; font-size: 11px; line-height: 130%; position: absolute; left: 0; margin-left: 15px; background: rgba(255, 255, 255, 0.8); padding: 15px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
+        .right-panels { left: unset; right: 0; margin: 0 15px 0 0; height: calc(100vh - 180px); overflow: scroll; }
         .left-top { top: 94px; }
+        .right-top { top: 140px; }
         .left-bottom { bottom: 0; margin-bottom: 40px; }
         #features { top: 0; height: 100px; margin-top: 20px; width: 250px; }
         #legend { font-weight: bold; line-height: 0;  }
@@ -33,27 +34,37 @@
         .note { font-size: 9px; font-weight: 400; margin-top: 8px; }
         .legend-key { display: inline-block; width: 15px; height: 15px; margin-right: 5px; }
         .legend-val { vertical-align: 3px; }        
-
+        .btn-group { position: absolute; z-index: 1; top: 94px; right: 15px; }
         #menu { background: #fff; position: absolute; z-index: 1; top: 94px; right: 10px; border-radius: 3px; width: 120px; border: 1px solid rgba(0, 0, 0, 0.4); }  
         #menu a { font-size: 13px; color: #404040; display: block; margin: 0; padding: 0; padding: 10px; text-decoration: none; border-bottom: 1px solid rgba(0, 0, 0, 0.25); text-align: center; }
         #menu a:last-child { border: none; }
         #menu a:hover { background-color: #f8f8f8; color: #404040; }
         #menu a.active { background-color: #3887be; color: #ffffff; }
         #menu a.active:hover { background: #3074a4; }
-
-
+        .med { margin-top: 5px; }
+        .above,.below { padding: 0 3px; font-size: 95%; }
+        .below { background-color: #fdae61; }
+        .above { background-color: #a6d96a; }
+        .btn-group-sm>.btn, .btn-sm { font-size: .675rem; font-weight: bold; }
     </style>
 </head>
 
 <body>
   <div id="title">Redlining and Property Values</div>
     <nav id="menu"></nav>
-
+<!--
+    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+      <button type="button" class="btn btn-secondary active">Parcels</button>
+      <button type="button" class="btn btn-secondary">HOLC areas</button>
+      <button type="button" class="btn btn-secondary">Historic map</button>
+    </div>
+-->
     <div id='map'>
     </div>
     <div class="info">
         <div class="addr"></div>
         <div class="val"></div>
+        <div class="med"></div>
     </div>
     
         <div class="left-panels left-top">
@@ -71,10 +82,21 @@
         </div>
         <div class="left-panels left-bottom" id="legend"></div>
 
+        <div class="right-panels right-top">
+            <h4>About redlining</h4>
+            <p>Redlining refers to the discriminatory act of refusing to lend money, extend credit to borrowers, or show real estate in certain areas of a town. The term was dubbed from the idea that mortgage lenders would draw “red lines” around neighborhoods which they did not want to make loans. </p>
 
+            <p>Faced with a housing shortage in the 1930’s, the federal government established the Federal Housing Administration (FHA), which established practices that allowed further racial segregation and discrimination against minorities by refusing to insure loans to neighborhoods deems less desirable. 
+            </p>
+            <p>In 1935, the Home Owners Loan Corporation (HOLC) created “residential security maps” for 239 cities, which graded neighborhoods based on loan desirability. Type “A” neighborhoods were colored green and were reserved for affluent suburbs on the outskirts of towns. Type “B”, or blue neighborhoods were considered desirable. However, type “C”, or yellow neighborhoods, and type “D”, or red neighborhoods were listed as declining. Typically the neighborhoods listed as declining contained older housing stock near the center of town, and frequently these areas contained minorities, immigrants, or were primarily African American. 
+            </p>
+            <p>While the practice of redlining occurred prior to the establishment of the FHA, the HOLC maps further exacerbated racial segregation and urban decay by publishing these maps for use by lenders. For decades, the FHA used the HOLC maps in their appraisal manuals which instructed banks to steer clear of areas with certain racial groups. Withholding mortgages in these areas made it much harder for neighborhoods to attract families to purchase homes.
+            </p>
+            <p>The Fair Housing Act was passed in 1968 to combat the practice of redlining, making it unlawful for lenders to discriminate based on race or national origin. The Community Reinvestment Act passed in 1977 further reduced discriminatory practices by requiring banks to apply the same lending criteria in all communities.
+            </p>
+                    </div>
 
   <!--scripts-->
-<!--   <script src="js/main.js" type="text/javascript"></script> -->
 
     <script>
 		function addCommas(x) {
@@ -227,8 +249,17 @@
                 var p = e.features[0].properties;
                 var value = p.value;
                 var addr = p.siteaddr;
+                var median = breaks[4];
+                var pctdiff = ((value-median)/median)*100;
+                var difference = "<strong>Same</strong> as the city average";
+                if (pctdiff>0) {
+                    difference = "<strong class='above'>"+Math.abs(pctdiff).toFixed(1)+"% above</strong> the city average";
+                } else if (pctdiff<0) {
+                    difference = "<strong class='below'>"+Math.abs(pctdiff).toFixed(1)+"% below</strong> the city average";
+                }
                 $(".addr").text(addr);
                 $(".val").text("Value: $"+addCommas(value));
+                $(".med").html(difference);
                 $(".info").show();
             })
             map.on('mouseenter', citylower+'-parcels', function() {
@@ -318,6 +349,8 @@
         }
         
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
 
 </html>
