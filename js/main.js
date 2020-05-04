@@ -36,12 +36,17 @@ function addCommas(x) {
       center: [-98.5795,38.8283],
       zoom: 3
     });
-    map.addControl(
-      new MapboxGeocoder({
+    
+    var geocoder = new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
         mapboxgl: mapboxgl
-      })
-    );
+      });
+      
+    geocoder.on('result',function(e) {
+        console.log(e.result.center);
+    })
+      
+    map.addControl(geocoder,'bottom-left');
 
     var nav = new mapboxgl.NavigationControl({showCompass:false});
     map.addControl(nav,'top-left');
@@ -59,10 +64,11 @@ function addCommas(x) {
     function makeCity(event) {
         $('#about').hide();
         $('#menu').empty();
-
+        $('.info').hide();
         var city = drop.value;
         var citylower = city.toLowerCase();
         var breaks = cityData[city].breaks;
+        geocoder.setPlaceholder('Search '+city+' addresses');
         map.fitBounds(cityData[city].bbox, {padding: 150});
         map.addLayer({
             id: citylower+'-holc-map',
@@ -83,6 +89,7 @@ function addCommas(x) {
             'id': citylower+'-holc',
             'type': 'fill',
             'source': citylower+'-holc-shapes',
+            'layout': { 'visibility': 'none' },
             'paint': {
                 'fill-opacity': 0.6,
                 'fill-color': [
@@ -101,6 +108,35 @@ function addCommas(x) {
             }
         })
 
+        map.addSource(citylower+'-demographics', {
+            type: 'geojson',
+            data: 'data/'+citylower+'_demo.geojson'
+        });
+
+        map.addLayer({
+            'id': citylower+'-demographics',
+            'type': 'fill',
+            'source': citylower+'-demographics',
+            'paint': {
+                'fill-opacity': 0.6,
+                'fill-color': [
+                    'interpolate',
+                    ['linear'],
+                    ['/',['-',['get','TOTPOP_CY'],['get','NHSPWHT_CY']],['get','TOTPOP_CY']],
+                    0,
+                    '#ffffcc',
+                    .25,
+                    '#a1dab4',
+                    .40,
+                    '#41b6c4',
+                    .60,
+                    '#2c7fb8',
+                    .80,
+                    '#253494'
+                ],
+            }
+        })
+
         map.addSource(citylower+'-parcels', {
             type: 'vector',
             url: mapbox_path + cityData[city].parcel_map
@@ -111,7 +147,7 @@ function addCommas(x) {
             'type': 'fill',
             'source': citylower+'-parcels',
             'source-layer': citylower + '_parcels',
-            'layout': { 'visibility': 'visible'},
+            'layout': { 'visibility': 'none'},
             'paint': {
                 'fill-color': [
                     'interpolate',
@@ -170,6 +206,31 @@ function addCommas(x) {
             $(".med").html(difference);
             $(".info").show();
         })
+
+
+        map.on('click',citylower+'-demographics',function(e) {
+            
+//             console.log(e.features[0].properties.TOTPOP_CY/e.features[0].properties.TOTPOP_CY);
+            var p = e.features[0].properties;
+            var pop = p.TOTPOP_CY;
+            var white = p.NHSPWHT_CY;
+            var inc = p.MEDHINC_CY;
+            var nw = ((pop-white)/pop)*100;
+            $(".val").html("<div>Population: <strong>"+addCommas(pop)+"</strong></div><div>Non-white population: <strong>"+nw.toFixed(1)+"%</strong></div><div>Median household income: <strong>$"+addCommas(inc)+"</strong></div>");
+            $(".info").show();
+        })
+
+
+
+
+
+
+
+
+
+
+
+
         map.on('mouseenter', citylower+'-parcels', function() {
             map.getCanvas().style.cursor = 'pointer';
         });
@@ -218,10 +279,21 @@ function addCommas(x) {
                 + "</div>";
         })
         legendblock = "<div class='legend-hed'>PROPERTY VALUE KEY</div>"+legendblock+"<div class='note'>" + cityData[city].name +" median single family home value: $"+addCommas(breaks[4])+"</div>";
-        $("#legend").html(legendblock);
+        $("#legend").html(legendblock).show();
 
 
         //Code for layer toggle
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
         // enumerate ids of the layers
         var toggleableLayerIds = [citylower+'-parcels', citylower+'-holc-map'];
@@ -238,8 +310,10 @@ function addCommas(x) {
               link.textContent = 'HOLC Map';
             }
 
+/*
             var layers = document.getElementById('menu');
             layers.appendChild(link);
+*/
 
             link.onclick = function(e) {
                 if (this.textContent == 'Parcels') {

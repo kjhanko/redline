@@ -42,6 +42,11 @@ h6 {
 	top: 84px;
 }
 
+.mapboxgl-ctrl-geocoder {
+    left: 50%;
+    transform: translateX(50%)
+}
+
 
 .map-overlay {
   position: absolute;
@@ -122,6 +127,7 @@ h6 {
 #legend {
   font-weight: bold;
   line-height: 0;
+  display:none; 
 }
 
 #legend .legend-hed, #legend .note {
