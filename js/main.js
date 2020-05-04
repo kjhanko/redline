@@ -217,18 +217,7 @@ function addCommas(x) {
             var nw = ((pop-white)/pop)*100;
             $(".val").html("<div>Population: <strong>"+addCommas(pop)+"</strong></div><div>Non-white population: <strong>"+nw.toFixed(1)+"%</strong></div><div>Median household income: <strong>$"+addCommas(inc)+"</strong></div>");
             $(".info").show();
-        })
-
-
-
-
-
-
-
-
-
-
-
+        });
 
         map.on('mouseenter', citylower+'-parcels', function() {
             map.getCanvas().style.cursor = 'pointer';
@@ -311,7 +300,6 @@ function addCommas(x) {
 
 /*
             var layers = document.getElementById('menu');
-
             layers.appendChild(link);
 */
 

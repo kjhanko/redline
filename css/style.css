@@ -163,6 +163,22 @@ h6 {
   right: 15px;
 }
 
+.aboutbtn:hover,
+.aboutbtn:active,
+.aboutbtn:focus {
+		background-color: #aaa;
+		border-color: #aaa;
+	}
+
+.aboutbtn,
+.aboutbtn:visited {
+	float: right;
+	z-index: 200;
+	background-color: #d73027;
+	border-color: #d73027;
+	font-size: .8rem;
+}
+
 #menu {
   background: #fff;
   position: absolute;
