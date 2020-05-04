@@ -33,6 +33,12 @@ h1, h2, h3, h4 {
   left: 200px;
 }
 
+/* Address search box */
+.mapboxgl-ctrl-top-right .mapboxgl-ctrl {
+	top: 84px;
+}
+
+
 .map-overlay {
   position: absolute;
   bottom: 0;
@@ -144,7 +150,7 @@ h1, h2, h3, h4 {
   background: #fff;
   position: absolute;
   z-index: 1;
-  top: 94px;
+  top: 144px;
   right: 10px;
   border-radius: 3px;
   width: 120px;
