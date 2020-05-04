@@ -57,8 +57,7 @@ function addCommas(x) {
     })
 
     function makeCity(event) {
-        $('#about').hide();
-        $('#menu').empty();
+        $('#menu').empty().removeAttr("style");
 
         var city = drop.value;
         var citylower = city.toLowerCase();
@@ -239,6 +238,7 @@ function addCommas(x) {
             }
 
             var layers = document.getElementById('menu');
+
             layers.appendChild(link);
 
             link.onclick = function(e) {
