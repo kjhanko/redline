@@ -25,15 +25,15 @@
   <div >
     <h1 id="title">Redlining and Property Values<span>
       <button type="button" class="btn btn-primary aboutbtn" data-toggle="modal" data-target="#AboutModal">About Redlining</button></span></h1>
-
   </div>
-    <!-- <nav id="menu" style="display:none"></nav> -->
 
-    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-      <button type="button" class="btn btn-secondary parcels active">Parcels</button>
-      <button type="button" class="btn holc-areas btn-secondary">HOLC areas</button>
-      <button type="button" class="btn holc-historic btn-secondary">Historic map</button>
-      <button type="button" class="btn block-groups btn-secondary">Demographics</button>
+    <div class="redline-layers">
+        <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+          <button type="button" data-layer="parcels" class="btn btn-secondary parcels active">Parcels</button>
+          <button type="button" data-layer="holc" class="btn holc btn-secondary">HOLC areas</button>
+          <button type="button" data-layer="holc-map" class="btn holc-map btn-secondary">Historic map</button>
+          <button type="button" data-layer="demographics" class="btn block-groups demographics btn-secondary">Demographics</button>
+        </div>
     </div>
     <div id='map'>
     </div>
