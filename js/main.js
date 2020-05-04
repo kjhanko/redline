@@ -36,16 +36,16 @@ function addCommas(x) {
       center: [-98.5795,38.8283],
       zoom: 3
     });
-    
+
     var geocoder = new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
         mapboxgl: mapboxgl
       });
-      
+
     geocoder.on('result',function(e) {
         console.log(e.result.center);
     })
-      
+
     map.addControl(geocoder,'bottom-left');
 
     var nav = new mapboxgl.NavigationControl({showCompass:false});
@@ -62,7 +62,6 @@ function addCommas(x) {
     })
 
     function makeCity(event) {
-        $('#about').hide();
         $('#menu').empty();
         $('.info').hide();
         var city = drop.value;
@@ -209,7 +208,7 @@ function addCommas(x) {
 
 
         map.on('click',citylower+'-demographics',function(e) {
-            
+
 //             console.log(e.features[0].properties.TOTPOP_CY/e.features[0].properties.TOTPOP_CY);
             var p = e.features[0].properties;
             var pop = p.TOTPOP_CY;
@@ -218,18 +217,7 @@ function addCommas(x) {
             var nw = ((pop-white)/pop)*100;
             $(".val").html("<div>Population: <strong>"+addCommas(pop)+"</strong></div><div>Non-white population: <strong>"+nw.toFixed(1)+"%</strong></div><div>Median household income: <strong>$"+addCommas(inc)+"</strong></div>");
             $(".info").show();
-        })
-
-
-
-
-
-
-
-
-
-
-
+        });
 
         map.on('mouseenter', citylower+'-parcels', function() {
             map.getCanvas().style.cursor = 'pointer';
@@ -283,17 +271,17 @@ function addCommas(x) {
 
 
         //Code for layer toggle
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
+
+
+
+
 
         // enumerate ids of the layers
         var toggleableLayerIds = [citylower+'-parcels', citylower+'-holc-map'];
