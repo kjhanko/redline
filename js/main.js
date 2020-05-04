@@ -2,6 +2,11 @@ function addCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+function resetSwitcher() {
+    $(".redline-layers .btn").removeClass("active");
+    $(".redline-layers .btn.parcels").addClass("active");
+}
+
     var cityData = {};
 
 
@@ -62,7 +67,8 @@ function addCommas(x) {
     })
 
     function makeCity(event) {
-        $('#menu').empty();
+        resetSwitcher();
+        $('#about').hide();
         $('.info').hide();
         var city = drop.value;
         var citylower = city.toLowerCase();
@@ -70,18 +76,18 @@ function addCommas(x) {
         geocoder.setPlaceholder('Search '+city+' addresses');
         map.fitBounds(cityData[city].bbox, {padding: 150});
         map.addLayer({
-            id: citylower+'-holc-map',
-            type: 'raster',
-            source: {
-                type: 'raster',
-                tiles: ['https://api.mapbox.com/v4/mfriesenwisc.' + cityData[city].holc_map + '/{z}/{x}/{y}.png?access_token='+mapboxgl.accessToken],
+            'id': citylower+'-holc-map',
+            'type': 'raster',
+            'source': {
+                'type': 'raster',
+                'tiles': ['https://api.mapbox.com/v4/mfriesenwisc.' + cityData[city].holc_map + '/{z}/{x}/{y}.png?access_token='+mapboxgl.accessToken],
             },
-            layout: { 'visibility': 'none' }
+            'layout': { 'visibility': 'none' }
         })
 
         map.addSource(citylower+'-holc-shapes', {
-            type: 'geojson',
-            data: 'data/'+citylower+'_holc.geojson'
+            'type': 'geojson',
+            'data': 'data/'+citylower+'_holc.geojson'
         });
 
         map.addLayer({
@@ -116,6 +122,7 @@ function addCommas(x) {
             'id': citylower+'-demographics',
             'type': 'fill',
             'source': citylower+'-demographics',
+            'layout': { 'visibility': 'none' },
             'paint': {
                 'fill-opacity': 0.6,
                 'fill-color': [
@@ -146,7 +153,7 @@ function addCommas(x) {
             'type': 'fill',
             'source': citylower+'-parcels',
             'source-layer': citylower + '_parcels',
-            'layout': { 'visibility': 'none'},
+            'layout': { 'visibility': 'visible'},
             'paint': {
                 'fill-color': [
                     'interpolate',
@@ -271,60 +278,24 @@ function addCommas(x) {
 
 
         //Code for layer toggle
-
-
-
-
-
-
-
-
-
-
-
-
-        // enumerate ids of the layers
-        var toggleableLayerIds = [citylower+'-parcels', citylower+'-holc-map'];
-        // set up the corresponding toggle button for each layer
-        for (var i = 0; i < toggleableLayerIds.length; i++) {
-            var id = toggleableLayerIds[i];
-            var link = document.createElement('a');
-            link.href = '#';
-            if (id==citylower+'-parcels') {
-                link.className = 'active';
-                link.textContent = 'Parcels';
+        $(".redline-layers").show();
+        $(".btn").on("click",function() {
+            var thisLayer = $(this).data("layer");
+            var clickedLayer = citylower+"-"+thisLayer;
+            $(".btn."+thisLayer).toggleClass("active");
+            var visibility = map.getLayoutProperty(clickedLayer,'visibility');
+            if (visibility === 'visible') {
+                $(".btn."+thisLayer).removeClass("active");
+                map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+            } else {
+                $(".btn."+thisLayer).addClass("active");
+                map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
             }
-            else if (id==citylower+'-holc-map') {
-              link.textContent = 'HOLC Map';
-            }
-
-/*
-            var layers = document.getElementById('menu');
-            layers.appendChild(link);
-*/
-
-            link.onclick = function(e) {
-                if (this.textContent == 'Parcels') {
-                  var clickedLayer = citylower+'-parcels';
-                }
-                else if (this.textContent == 'HOLC Map') {
-                  var clickedLayer = citylower+'-holc-map';
-                }
-
-                e.preventDefault();
-                e.stopPropagation();
-
-                var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
-
-                // toggle layer visibility by changing the layout object's visibility property
-                if (visibility === 'visible') {
-                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-                    this.className = '';
-                } else {
-                    this.className = 'active';
-                    map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-                }
-            };
-
-        }
+        })
+        
+        
+        
+        
+        
+        
     }
