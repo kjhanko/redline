@@ -57,6 +57,9 @@ function addCommas(x) {
     })
 
     function makeCity(event) {
+        $('#about').hide();
+        $('#menu').empty();
+
         var city = drop.value;
         var citylower = city.toLowerCase();
         var breaks = cityData[city].breaks;
@@ -97,7 +100,6 @@ function addCommas(x) {
                 ],
             }
         })
-
 
         map.addSource(citylower+'-parcels', {
             type: 'vector',
@@ -223,20 +225,30 @@ function addCommas(x) {
 
         // enumerate ids of the layers
         var toggleableLayerIds = [citylower+'-parcels', citylower+'-holc-map'];
-
         // set up the corresponding toggle button for each layer
         for (var i = 0; i < toggleableLayerIds.length; i++) {
             var id = toggleableLayerIds[i];
-
             var link = document.createElement('a');
             link.href = '#';
             if (id==citylower+'-parcels') {
                 link.className = 'active';
+                link.textContent = 'Parcels';
             }
-            link.textContent = id;
+            else if (id==citylower+'-holc-map') {
+              link.textContent = 'HOLC Map';
+            }
+
+            var layers = document.getElementById('menu');
+            layers.appendChild(link);
 
             link.onclick = function(e) {
-                var clickedLayer = this.textContent;
+                if (this.textContent == 'Parcels') {
+                  var clickedLayer = citylower+'-parcels';
+                }
+                else if (this.textContent == 'HOLC Map') {
+                  var clickedLayer = citylower+'-holc-map';
+                }
+
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -252,7 +264,5 @@ function addCommas(x) {
                 }
             };
 
-            var layers = document.getElementById('menu');
-            layers.appendChild(link);
         }
     }
