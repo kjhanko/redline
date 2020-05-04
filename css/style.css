@@ -21,22 +21,8 @@ h1, h2, h3, h4, h5 {
   font-weight: bold;
 }
 
-
-
-.aboutbtn:hover,
-.aboutbtn:active,
-.aboutbtn:focus {
-		background-color: #aaa;
-		border-color: #aaa;
-	}
-
-.aboutbtn,
-.aboutbtn:visited {
-	float: right;
-	z-index: 200;
-	background-color: #d73027;
-	border-color: #d73027;
-	font-size: .8rem;
+h6 {
+  padding: 10px 0 0;
 }
 
 #map {
@@ -54,6 +40,11 @@ h1, h2, h3, h4, h5 {
 /* Address search box */
 .mapboxgl-ctrl-top-right .mapboxgl-ctrl {
 	top: 84px;
+}
+
+.mapboxgl-ctrl-geocoder {
+    left: 50%;
+    transform: translateX(50%)
 }
 
 
@@ -103,7 +94,7 @@ h1, h2, h3, h4, h5 {
   right: 0;
   margin: 0 15px 0 0;
   height: calc(100vh - 180px);
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .left-top {
@@ -119,6 +110,13 @@ h1, h2, h3, h4, h5 {
   margin-bottom: 40px;
 }
 
+#overview {
+  padding-right: 8px;
+  overflow-y: scroll;
+  width: 180px;
+  height: calc(100vh - 390px);
+}
+
 #features {
   top: 0;
   height: 100px;
@@ -129,6 +127,7 @@ h1, h2, h3, h4, h5 {
 #legend {
   font-weight: bold;
   line-height: 0;
+  display:none;
 }
 
 #legend .legend-hed, #legend .note {

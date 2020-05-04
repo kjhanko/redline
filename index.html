@@ -27,14 +27,14 @@
       <button type="button" class="btn btn-primary aboutbtn" data-toggle="modal" data-target="#AboutModal">About Redlining</button></span></h1>
 
   </div>
-    <nav id="menu" style="display:none"></nav>
+    <!-- <nav id="menu" style="display:none"></nav> -->
 <!--
     <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-      <button type="button" class="btn btn-secondary active">Parcels</button>
-      <button type="button" class="btn btn-secondary">HOLC areas</button>
-      <button type="button" class="btn btn-secondary">Historic map</button>
+      <button type="button" class="btn btn-secondary parcels active">Parcels</button>
+      <button type="button" class="btn holc-areas btn-secondary">HOLC areas</button>
+      <button type="button" class="btn holc-historic btn-secondary">Historic map</button>
+      <button type="button" class="btn block-groups btn-secondary">Demographics</button>
     </div>
--->
     <div id='map'>
     </div>
     <div class="info">
@@ -54,7 +54,36 @@
                     <option value="Portland">Portland</option>
                 </select>
             </div>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            <hr>
+            <div id="overview">
+              <h6>Overview</h6>
+              <p>Select a city from the drop-down menu</p>
+              <p>Use the seach box to zoom to a specific location</p>
+              <p>Toggle buttons to view single family home parcels, HOLC maps, and HOLC neighborhood boundaries layers</p>
+              <hr>
+              <h6>HOLC Grades</h6>
+              <p>1930s HOLC neighborhood loan desirability grades:</p>
+              <table style="width:100%">
+                <tr><th>Grade</th><th>Color</th><th>Desirability</th></tr>
+                <tr><td>A</td><td>Green</td><td>Best</td></tr>
+                <tr><td>B</td><td>Blue</td><td>Desirable</td></tr>
+                <tr><td>C</td><td>Yellow</td><td>Declining</td></tr>
+                <tr><td>D</td><td>Red</td><td>Hazardous</td></tr>
+              </table>
+              <hr>
+              <h6>Sources</h6>
+              <p>HOLC Maps: <a href="https://dsl.richmond.edu/panorama/redlining/#loc=5/41.216/-94.58&text=downloads">Mapping Inequality</a></p>
+              <p>2018 USA Demographics: <a href="https://www.arcgis.com/home/item.html?id=2718975e52e24286acf8c3882b7ceb18">ESRI Popular Demographics</a></p>
+              <p>Parcels: <a href="https://www.nconemap.gov/datasets/1de3d7d828ce4813b838ddf055b40317_1">NC OneMap, </a>
+                          <a href="http://opendata.minneapolismn.gov/datasets/assessors-parcel-data-2020">Open Minneapolis, </a>
+                          <a href="https://www.hennepin.us/gisopendata">Hennepin County, </a>
+                          <a href="https://dcp-coaplangis.opendata.arcgis.com/">Atlanta Department of City Planning, </a>
+                          <a href="https://data-cityofmadison.opendata.arcgis.com/datasets/tax-parcels-assessor-property-information">City of Madison, </a>
+                          <a href="http://rlisdiscovery.oregonmetro.gov/">Metro Regional Government</a>
+              </p>
+              <hr>
+              <p><small>Map designed and created by Mark Friesen, Kerry Hanko, and Liz Puhl</small></p>
+            </div>
         </div>
         <div class="left-panels left-bottom" id="legend"></div>
 
