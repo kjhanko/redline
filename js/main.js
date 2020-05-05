@@ -289,21 +289,21 @@ function clearInfo() {
 
         legendblock += "<div class='legend_demographics'><div class='legend-hed'>NON-WHITE POPULATION</div>"
         +        "<div class='legend-scale'>"
-        +            "<ul class='legend-labels'>"
+        +            "<ul class='YlGnBu legend-labels'>"
         +                "<li>"
-        +                    "<span style='background:#ffffcc;'></span>"
+        +                    "<span class='q0-5'></span>"
         +                "</li>"
         +                "<li>"
-        +                    "<span style='background:#a1dab4;'></span>"
+        +                    "<span class='q1-5'></span>"
         +                "</li>"
         +                "<li>"
-        +                    "<span style='background: #41b6c4'></span>"
+        +                    "<span class='q2-5'></span>"
         +                "</li>"
         +                "<li>"
-        +                    "<span style='background:#2c7fb8'></span>"
+        +                    "<span class='q3-5'></span>"
         +                "</li>"
         +                "<li>"
-        +                    "<span style='background:#253494'></span>"
+        +                    "<span class='q4-5'></span>"
         +                "</li>"
         +            "</ul>"
         +            "<ul class='legend-labels tick-values'>"
@@ -327,6 +327,9 @@ function clearInfo() {
         $(".redline-layers").show();
         $(".btn").on("click",function() {
             var thisLayer = $(this).data("layer");
+            if ((thisLayer=='demographics')||(thisLayer=='parcels')) {
+                $("#legend,.legend_"+thisLayer).show();
+            }
             var clickedLayer = citylower+"-"+thisLayer;
             $(".btn."+thisLayer).toggleClass("active");
             var visibility = map.getLayoutProperty(clickedLayer,'visibility');
