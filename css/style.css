@@ -5,7 +5,7 @@ body {
 }
 
 p {
-   margin-bottom: .5rem; 
+   margin-bottom: .5rem;
 }
 
 #title {
@@ -41,14 +41,20 @@ h6 {
   left: 200px;
 }
 
+
 /* Address search box */
 .mapboxgl-ctrl-top-right .mapboxgl-ctrl {
 	top: 84px;
 }
 
 .mapboxgl-ctrl-geocoder {
-    left: 50%;
-    transform: translateX(50%)
+    /* left: 50%; */
+    transform: translateX(18%)
+}
+
+/* Zoom in/out buttons */
+div.mapboxgl-control-container > div.mapboxgl-ctrl-top-left > div.mapboxgl-ctrl.mapboxgl-ctrl-group {
+	transform: translateY(-45px);
 }
 
 
@@ -113,6 +119,7 @@ h6 {
   bottom: 0;
   margin-bottom: 40px;
 }
+
 
 #overview {
   padding-right: 8px;
@@ -183,6 +190,46 @@ h6 {
 	font-size: .8rem;
 }
 
+#menu {
+  background: #fff;
+  position: absolute;
+  z-index: 1;
+  top: 144px;
+  right: 10px;
+  border-radius: 3px;
+  width: 120px;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+#menu a {
+  font-size: 13px;
+  color: #404040;
+  display: block;
+  margin: 0;
+  padding: 0;
+  padding: 10px;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+#menu a:last-child {
+  border: none;
+}
+
+#menu a:hover {
+  background-color: #f8f8f8;
+  color: #404040;
+}
+
+#menu a.active {
+  background-color: #3887be;
+  color: #ffffff;
+}
+
+#menu a.active:hover {
+  background: #3074a4;
+}
 
 .med {
   margin-top: 5px;
@@ -206,8 +253,8 @@ h6 {
   font-weight: bold;
 }
 
-.redline-layers { 
-    display:none; 
+.redline-layers {
+    display:none;
 }
 
 table.holc-grades {
@@ -234,12 +281,12 @@ td.holc-red {
     background-color: #d53e4f;
 }
 td.desire {
-    padding-left: 5px; 
+    padding-left: 5px;
 }
 
 .legend-scale { width: 100%; }
 .legend-labels { margin:0;padding:0;float: left;list-style: none;text-align: center; width:100%; }
-.legend_demographics { 
+.legend_demographics {
     margin-top:8px;
     display:none;
 }
@@ -247,4 +294,3 @@ td.desire {
 .legend_demographics ul.tick-values li { text-align: center; }
 .legend_demographics ul.savings li { width:20%; }
 .legend_demographics ul li span { display: block; float: left; height: 12px; width: 100%; }
- 
