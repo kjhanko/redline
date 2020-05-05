@@ -62,14 +62,20 @@ h6 {
   left: 200px;
 }
 
+
 /* Address search box */
 .mapboxgl-ctrl-top-right .mapboxgl-ctrl {
 	top: 84px;
 }
 
 .mapboxgl-ctrl-geocoder {
-    left: 50%;
-    transform: translateX(50%)
+    /* left: 50%; */
+    transform: translateX(18%)
+}
+
+/* Zoom in/out buttons */
+div.mapboxgl-control-container > div.mapboxgl-ctrl-top-left > div.mapboxgl-ctrl.mapboxgl-ctrl-group {
+	transform: translateY(-45px);
 }
 
 
@@ -134,6 +140,7 @@ h6 {
   bottom: 0;
   margin-bottom: 40px;
 }
+
 
 #overview {
   padding-right: 8px;

@@ -51,7 +51,7 @@ function resetSwitcher() {
         console.log(e.result.center);
     })
 
-    map.addControl(geocoder,'bottom-left');
+    map.addControl(geocoder,'top-left');
 
     var nav = new mapboxgl.NavigationControl({showCompass:false});
     map.addControl(nav,'top-left');
