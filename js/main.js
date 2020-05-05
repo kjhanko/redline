@@ -7,6 +7,9 @@ function resetSwitcher() {
     $(".redline-layers .btn.parcels").addClass("active");
 }
 
+function clearInfo() {
+    $(".addr,.val,.med").html("");
+}
     var cityData = {};
 
 
@@ -57,8 +60,12 @@ function resetSwitcher() {
     map.addControl(nav,'top-left');
     var hoveredStateId = null;
 
-    // var drop = document.getElementById("change_city");
-    // drop.addEventListener("change", makeCity);
+    var drop = document.getElementById("change_city");
+    drop.addEventListener("change", makeCity);
+
+    $(".info").on("click",function() {
+        $(this).hide();
+    })
 
     $(".dropdown-item.city").click(function() {
         var city = $(this).html();
@@ -77,7 +84,7 @@ function resetSwitcher() {
         var citylower = city.toLowerCase();
         var breaks = cityData[city].breaks;
         geocoder.setPlaceholder('Search '+city+' addresses');
-        map.fitBounds(cityData[city].bbox, {padding: 150});
+        map.fitBounds(cityData[city].bbox, {padding: {top: 100, bottom: 100, left: 150, right: 5} });
         map.addLayer({
             'id': citylower+'-holc-map',
             'type': 'raster',
@@ -199,6 +206,7 @@ function resetSwitcher() {
         })
 
         map.on('click',citylower+'-parcels',function(e) {
+            clearInfo();
             var p = e.features[0].properties;
             var value = p.value;
             var addr = p.siteaddr;
@@ -218,6 +226,7 @@ function resetSwitcher() {
 
 
         map.on('click',citylower+'-demographics',function(e) {
+            clearInfo();
 
 //             console.log(e.features[0].properties.TOTPOP_CY/e.features[0].properties.TOTPOP_CY);
             var p = e.features[0].properties;
@@ -276,8 +285,42 @@ function resetSwitcher() {
                 + "<span class='legend-val'>"+legend_break+"</span>"
                 + "</div>";
         })
-        legendblock = "<div class='legend-hed'>PROPERTY VALUE KEY</div>"+legendblock+"<div class='note'>" + cityData[city].name +" median single family home value: $"+addCommas(breaks[4])+"</div>";
-        $("#legend").html(legendblock).show();
+        legendblock = "<div class='legend_parcels'><div class='legend-hed'>PROPERTY VALUE KEY</div>"+legendblock+"<div class='note'>" + cityData[city].name +" median single family home value: $"+addCommas(breaks[4])+"</div></div>";
+
+        legendblock += "<div class='legend_demographics'><div class='legend-hed'>NON-WHITE POPULATION</div>"
+        +        "<div class='legend-scale'>"
+        +            "<ul class='legend-labels'>"
+        +                "<li>"
+        +                    "<span style='background:#ffffcc;'></span>"
+        +                "</li>"
+        +                "<li>"
+        +                    "<span style='background:#a1dab4;'></span>"
+        +                "</li>"
+        +                "<li>"
+        +                    "<span style='background: #41b6c4'></span>"
+        +                "</li>"
+        +                "<li>"
+        +                    "<span style='background:#2c7fb8'></span>"
+        +                "</li>"
+        +                "<li>"
+        +                    "<span style='background:#253494'></span>"
+        +                "</li>"
+        +            "</ul>"
+        +            "<ul class='legend-labels tick-values'>"
+        +                "<li style='width:10%'></li>"
+        +                "<li>25%</li>"
+        +                "<li>40%</li>"
+        +                "<li>60%</li>"
+        +                "<li>80%</li>"
+        +            "</ul>"
+        +        "</div>"
+        +   "</div>";
+
+
+        
+        $("#legend").html(legendblock);
+        $("#legend").show();
+
 
 
         //Code for layer toggle
@@ -294,6 +337,22 @@ function resetSwitcher() {
                 $(".btn."+thisLayer).addClass("active");
                 map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
             }
+ 
+            if ($(".btn.parcels").hasClass("active")) {
+                $(".legend_parcels").show();
+            } else {
+                $(".legend_parcels").hide();
+            }
+            if ($(".btn.demographics").hasClass("active")) {
+                $(".legend_demographics").show();
+            } else {
+                $(".legend_demographics").hide();
+            }
+            if ((!$(".btn.parcels").hasClass("active")) && (!$(".btn.demographics").hasClass("active"))) {
+                $("#legend").hide();
+            }
+            
+            
         })
 
 
