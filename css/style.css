@@ -29,31 +29,6 @@ h6 {
   padding: 10px 0 0;
 }
 
-/* HOLC key colors */
-
-.color {
-	font-weight: bold;
-	color: white;
-	padding: 0 3px 0 3px;
-}
-#green {
-	background-color: #66c2a5;
-}
-
-#blue {
-	background-color: #3288bd;
-}
-
-#yellow {
-	background-color: #fee08b;
-	color: black;
-}
-
-#red {
-	background-color: #d53e4f;
-}
-
-
 #map {
   position: absolute;
   top: 0;
