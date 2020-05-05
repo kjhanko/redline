@@ -66,16 +66,15 @@
               <p>Select a city from the dropdown menu.</p>
               <p>Use the search box to zoom to a specific location.</p>
               <p>Toggle buttons to view single family home parcels, HOLC neighborhood boundaries, historic HOLC maps, and demographics layers.</p>
+              <p>Click on a parcel or demographic block for further details on that location</p>
               <hr>
               <h6>HOLC Grades</h6>
               <p>1930s HOLC neighborhood loan desirability grades:</p>
-              <table style="width:100%">
-                <tr><th>Grade</th><th>Color</th><th>Desirability</th></tr>
-                <tr><td>A</td><td><span id="green" class="color">Green</span></td><td>Best</td></tr>
-                <tr><td>B</td><td>
-                <span id="blue" class="color">Blue</span></td><td>Desirable</td></tr>
-                <tr><td>C</td><td><span id="yellow" class="color">Yellow</span></td><td>Declining</td></tr>
-                <tr><td>D</td><td><span id="red" class="color">Red</span></td><td>Hazardous</td></tr>
+              <table class="holc-grades">
+                <tr><td class="grade holc-green">A</td><td class="desire">Best</td></tr>
+                <tr><td class="grade holc-blue">B</td><td class="desire">Desirable</td></tr>
+                <tr><td class="grade holc-yellow">C</td><td class="desire">Declining</td></tr>
+                <tr><td class="grade holc-red">D</td><td class="desire">Hazardous</td></tr>
               </table>
               <hr>
               <h6>Sources</h6>
