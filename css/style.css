@@ -4,6 +4,10 @@ body {
   padding: 0;
 }
 
+p {
+   margin-bottom: .5rem; 
+}
+
 #title {
   z-index: 100;
   position: fixed;
@@ -114,7 +118,7 @@ h6 {
   padding-right: 8px;
   overflow-y: scroll;
   width: 160px;
-  height: calc(100vh - 390px);
+  height: calc(100vh - 490px);
 }
 
 #features {
@@ -205,3 +209,42 @@ h6 {
 .redline-layers { 
     display:none; 
 }
+
+table.holc-grades {
+    width: 100%;
+}
+
+.holc-grades td { padding: 2px; }
+td.grade {
+    text-align: center;
+    font-weight: bold;
+}
+
+td.holc-green {
+    background-color: #66c2a5;
+}
+
+td.holc-blue {
+    background-color: #3288bd;
+}
+td.holc-yellow {
+    background-color: #fee08b;
+}
+td.holc-red {
+    background-color: #d53e4f;
+}
+td.desire {
+    padding-left: 5px; 
+}
+
+.legend-scale { width: 100%; }
+.legend-labels { margin:0;padding:0;float: left;list-style: none;text-align: center; width:100%; }
+.legend_demographics { 
+    margin-top:8px;
+    display:none;
+}
+.legend_demographics ul li { display: block; float: left; width: 20%; margin-bottom: 5px;text-align: left; font-size:10px; list-style: none; }
+.legend_demographics ul.tick-values li { text-align: center; }
+.legend_demographics ul.savings li { width:20%; }
+.legend_demographics ul li span { display: block; float: left; height: 12px; width: 100%; }
+ 
