@@ -113,7 +113,7 @@ h6 {
 #overview {
   padding-right: 8px;
   overflow-y: scroll;
-  width: 180px;
+  width: 160px;
   height: calc(100vh - 390px);
 }
 

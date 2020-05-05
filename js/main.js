@@ -52,19 +52,23 @@ function addCommas(x) {
     map.addControl(nav,'top-left');
     var hoveredStateId = null;
 
-    var drop = document.getElementById("change_city");
-    drop.addEventListener("change", makeCity);
+    // var drop = document.getElementById("change_city");
+    // drop.addEventListener("change", makeCity);
 
-
-
+    $(".dropdown-item.city").click(function() {
+        var city = $(this).html();
+        console.log(city);
+        $('#dropdownMenuButton').text($(this).text());
+        makeCity(city);
+    });
 
     map.on('load',function() {
     })
 
-    function makeCity(event) {
+    function makeCity(city, event) {
         $('#menu').empty();
         $('.info').hide();
-        var city = drop.value;
+        // var city = $('dropdown-item.c');
         var citylower = city.toLowerCase();
         var breaks = cityData[city].breaks;
         geocoder.setPlaceholder('Search '+city+' addresses');
@@ -327,4 +331,5 @@ function addCommas(x) {
             };
 
         }
+        // city = '';
     }

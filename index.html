@@ -44,7 +44,21 @@
     </div>
 
         <div class="left-panels left-top">
-            <div>
+
+          <div class="dropdown" id="change_city">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Choose a city
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item city" href="#">Atlanta</a>
+                <a class="dropdown-item city" href="#">Durham</a>
+                <a class="dropdown-item city" href="#">Madison</a>
+                <a class="dropdown-item city" href="#">Minneapolis</a>
+                <a class="dropdown-item city" href="#">Portland</a>
+              </div>
+          </div>
+
+            <!-- <div>
                 <select id="change_city">
                     <option selected>Choose a city</option>
                     <option value="Atlanta">Atlanta</option>
@@ -53,13 +67,14 @@
                     <option value="Minneapolis">Minneapolis</option>
                     <option value="Portland">Portland</option>
                 </select>
-            </div>
+            </div> -->
+
             <hr>
             <div id="overview">
               <h6>Overview</h6>
-              <p>Select a city from the drop-down menu</p>
-              <p>Use the search box to zoom to a specific location</p>
-              <p>Toggle buttons to view single family home parcels, HOLC maps, and HOLC neighborhood boundaries layers</p>
+              <p>Select a city from the dropdown menu.</p>
+              <p>Use the search box to zoom to a specific location.</p>
+              <p>Toggle buttons to view single family home parcels, HOLC maps, and HOLC neighborhood boundaries layers.</p>
               <hr>
               <h6>HOLC Grades</h6>
               <p>1930s HOLC neighborhood loan desirability grades:</p>
